@@ -29,7 +29,8 @@ class UserDestroyAPIView(generics.DestroyAPIView):
 
 
 class UserPaymentsAPIView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated] # только аутентифицированные пользователи имеют доступ к данному
+    # представлению
     serializer_class = UserSerializer
 
     def get_object(self):
