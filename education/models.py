@@ -44,8 +44,10 @@ class Payments(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     payment_date = models.DateTimeField(default=timezone.now, verbose_name='Дата оплаты')
-    paid_course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Оплаченный курс', **NULLABLE)
-    paid_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='Оплаченный урок', **NULLABLE)
+    paid_course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='paid_course',
+                                    verbose_name='Оплаченный курс', **NULLABLE)
+    paid_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='paid_lesson',
+                                    verbose_name='Оплаченный урок', **NULLABLE)
     payment_amount = models.DecimalField(max_digits=10, decimal_places=2,
                                          verbose_name='Сумма оплаты')  # модель DecimalField позволяет хранить
     # Десятичные числа с фиксированной точностью. Максимальное количество цифр(max_digits), которое может быть
