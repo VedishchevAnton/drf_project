@@ -25,9 +25,3 @@ urlpatterns = [
 #     "email": "admin@mail.ru",
 #     "password": "Q1w2e3r4"
 # }
-# {
-#     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
-#                ".eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4OTY5NzA2NCwiaWF0IjoxNjg5NjEwNjY0LCJqdGkiOiIxMzkxMjFlMTQyMDQ0OTI3YTZmMGY3ODRlMWQxMjRkYiIsInVzZXJfaWQiOjJ9.SzeTnaTHyYyvOpSNZjaOP-QQOvzAqCZHwJVg-tE__eQ",
-#     "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
-#               ".eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg5NjEwOTY0LCJpYXQiOjE2ODk2MTA2NjQsImp0aSI6IjM2YTQ4MGJlMWIzZDQ4OTU4OGE5OTQ1NjM0NDYwOGUxIiwidXNlcl9pZCI6Mn0.du4w6XndbxULYJncYFAmNu8XU9m2VGxM0EdMHH7gPCk"
-# }
