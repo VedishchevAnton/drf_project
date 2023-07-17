@@ -141,10 +141,10 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],  # Настройки JWT-токенов
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ]  # перекрываем полностью всю работу от анонимных(неавторизованных пользователей)
-    # 'rest_framework.permissions.AllowAny' # без ограничений для всех включая анонимов, но нужно прописывать для
-    # каждого эндпоинта permission_classes = [IsAuthenticated]
+        'rest_framework.permissions.AllowAny',  # без ограничений для всех включая анонимов
+        # 'rest_framework.permissions.IsAuthenticated' # перекрываем полностью всю работу от анонимных
+        # (неавторизованных пользователей)
+    ]
 }
 
 # Настройки срока действия токенов
