@@ -4,49 +4,55 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 
 from education.models import Course, Lesson, Payments
-from education.permissions import ModeratorGroup
+from education.permissions import LessonPermission, CoursePermission
 from education.serliazers import CourseSerializer, LessonSerializer, PaymentsSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
-    permission_classes = [IsAuthenticated, ModeratorGroup]
+    permission_classes = [IsAuthenticated, CoursePermission]
 
     def perform_create(self, serializer):
-        new_course = serializer.save()
+        new_course = serializer.save(owner=self.request.user)
         new_course.owner = self.request.user
         new_course.save()
+
+    def get_queryset(self):
+        return Lesson.objects.filter(owner=self.request.user)
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, ModeratorGroup]
+    permission_classes = [IsAuthenticated,  LessonPermission]
 
     def perform_create(self, serializer):
-        new_lesson = serializer.save()
+        new_lesson = serializer.save(owner=self.request.user)
         new_lesson.owner = self.request.user
         new_lesson.save()
 
 
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, ModeratorGroup]
+    permission_classes = [IsAuthenticated,  LessonPermission]
+
+    def get_queryset(self):
+        return Lesson.objects.filter(owner=self.request.user)
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, ModeratorGroup]
+    permission_classes = [IsAuthenticated,  LessonPermission]
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, ModeratorGroup]
+    permission_classes = [IsAuthenticated,  LessonPermission]
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated, ModeratorGroup]
+    permission_classes = [IsAuthenticated,  LessonPermission]
 
 
 class PaymentsCreateAPIView(generics.CreateAPIView):
