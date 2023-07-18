@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
@@ -10,6 +11,7 @@ class Course(models.Model):
     title = models.CharField(max_length=200, verbose_name='Название курса')
     description = models.TextField(verbose_name='Описание курса')
     preview_image = models.ImageField(upload_to='course_previews/', verbose_name='Превью', **NULLABLE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Владелец', ** NULLABLE)
 
     def __str__(self):
         return f'{self.title}'
@@ -20,13 +22,14 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
+    """Модель урока"""
     title = models.CharField(max_length=200, verbose_name='Название урока')
     description = models.TextField(verbose_name='Описание урока')
     preview_image = models.ImageField(upload_to='lesson_previews/', verbose_name='Превью', **NULLABLE)
     course = models.ForeignKey(Course, default=1, on_delete=models.CASCADE, related_name='lessons',
                                verbose_name='Курс')  # related_name='lessons' задает имя обратной связи для доступа к
-
     # объектам Lesson из объектов Course.
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Владелец', **NULLABLE)
 
     def __str__(self):
         return f'{self.title}'
@@ -37,6 +40,7 @@ class Lesson(models.Model):
 
 
 class Payments(models.Model):
+    """Модель платежей"""
     choices_payment_method = [
         ('cash', 'Наличные'),
         ('bank transfer', 'Перевод на счет')

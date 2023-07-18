@@ -17,6 +17,11 @@ class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        new_lesson = serializer.save()
+        new_lesson.owner = self.request.user
+        new_lesson.save()
+
 
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
