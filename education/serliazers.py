@@ -2,8 +2,21 @@ from rest_framework import serializers
 
 from education.models import Course, Lesson, Payments
 
+import re
+
+
+def validate_content(value):
+    # Проверка содержимого на наличие недопустимых ссылок
+    # В данном случае, разрешаем только ссылки на youtube.com
+    pattern = r'(https?://)?(www\.)?youtube\.com'
+    if not re.search(pattern, value):
+        raise serializers.ValidationError("Содержимое содержит недопустимые ссылки.")
+    return value
+
 
 class LessonSerializer(serializers.ModelSerializer):
+    content = serializers.CharField(validators=[validate_content])
+
     class Meta:
         model = Lesson
         fields = '__all__'
@@ -17,6 +30,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     # коллекцией объектов, а read_only=True означает, что это поле только для чтения и не будет использоваться для
     # создания или обновления объектов
+    content = serializers.CharField(validators=[validate_content])
 
     @staticmethod
     def get_lessons_count(obj):
