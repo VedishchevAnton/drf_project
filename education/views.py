@@ -1,7 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
 from rest_framework.filters import OrderingFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from education.models import Course, Lesson, Payments, CourseSubscription
 from education.paginators import VehiclePaginator
@@ -26,7 +26,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, LessonPermission]
+    permission_classes = [AllowAny, LessonPermission]
 
     def perform_create(self, serializer):
         new_lesson = serializer.save(owner=self.request.user)
