@@ -69,6 +69,7 @@ class Payments(models.Model):
 
 
 class CourseSubscription(models.Model):
+    """Модель подписки"""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
     is_subscribed = models.BooleanField(default=False, verbose_name='Подписка на обновления')
