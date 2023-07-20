@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from education.models import Course, Lesson, Payments
+from education.models import Course, Lesson, Payments, CourseSubscription
 
 import re
 
@@ -31,21 +31,19 @@ class CourseSerializer(serializers.ModelSerializer):
     # коллекцией объектов, а read_only=True означает, что это поле только для чтения и не будет использоваться для
     # создания или обновления объектов
     content = serializers.CharField(validators=[validate_content])
+    is_subscribed = serializers.SerializerMethodField()
 
     @staticmethod
     def get_lessons_count(obj):
         """Метод возвращает количество уроков, связанных с курсом."""
         return obj.lessons.count()
 
-    # @staticmethod
-    # def get_lesson_data(obj):
-    #     lesson_data = []
-    #     for lesson in obj.lesson_set.all():
-    #         lesson_data.append({
-    #             'title': lesson.title,
-    #             'description': lesson.description,
-    #         })
-    #     return lesson_data
+    def get_is_subscribed(self, obj):
+        """Метод проверяет, авторизован ли текущий пользователь и подписан ли он на курс"""
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return CourseSubscription.objects.filter(user=request.user, course=obj).exists()
+        return False
 
     class Meta:
         model = Course
