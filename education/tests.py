@@ -74,20 +74,19 @@ class EducationTestCase(APITestCase):
         self.assertEquals(response.data['content'], data['content'])
         self.assertEquals(response.data['course'], data['course'])
 
+    def test_delete_lesson(self):
+        """Тестирование удаления уроков"""
 
-    # def test_delete_lesson(self):
-    #     """Тестирование удаления уроков"""
-    #
-    #     lesson = Lesson.objects.create(
-    #         title='Test',
-    #         description='Test',
-    #         content='Test',
-    #         course=1,
-    #         owner=self.user
-    #     )
-    #
-    #     url = reverse('lesson-delete', kwargs={'pk': lesson.pk})
-    #     response = self.client.delete(url)
-    #
-    #     self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
-    #     self.assertFalse(Lesson.objects.filter(pk=lesson.pk).exists())
+        lesson = Lesson.objects.create(
+            title='Test',
+            description='Test',
+            content='https://www.youtube.com/',
+            course=self.course,
+            owner=self.user
+        )
+
+        url = reverse('education:lesson-delete', kwargs={'pk': lesson.pk})
+        response = self.client.delete(url)
+
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Lesson.objects.filter(pk=lesson.pk).exists())
