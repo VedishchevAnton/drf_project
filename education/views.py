@@ -45,7 +45,7 @@ class LessonListAPIView(generics.ListAPIView):
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, LessonPermission]
+    permission_classes = [AllowAny, LessonPermission]
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
@@ -58,7 +58,7 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated, LessonPermission]
+    permission_classes = [AllowAny, LessonPermission]
 
 
 class PaymentsCreateAPIView(generics.CreateAPIView):
@@ -99,4 +99,4 @@ class CourseSubscriptionCreateAPIView(generics.CreateAPIView):
 
 class CourseSubscriptionDestroyAPIView(generics.DestroyAPIView):
     queryset = CourseSubscription.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]

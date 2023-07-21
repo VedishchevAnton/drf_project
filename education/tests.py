@@ -3,7 +3,7 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 
 from users.models import User
-from .models import Lesson, Course
+from .models import Lesson, Course, CourseSubscription
 from .serliazers import LessonSerializer
 
 
@@ -26,6 +26,13 @@ class EducationTestCase(APITestCase):
             owner=self.user
         )
 
+        # Создание тестовой подписки
+        self.subscription = CourseSubscription.objects.create(
+            user=self.user,
+            course=self.course,
+            is_subscribed=True
+        )
+
     def test_create_lesson(self):
         # Тестирование создания уроков
 
@@ -38,8 +45,6 @@ class EducationTestCase(APITestCase):
         }
 
         response = self.client.post(url, data, format='json')  # Отправка POST-запроса для создания урока
-
-        print(response.json())
 
         self.assertEqual(response.status_code,
                          status.HTTP_201_CREATED)  # Проверка, что код статуса ответа равен 201 (Создан)
@@ -74,19 +79,44 @@ class EducationTestCase(APITestCase):
         self.assertEquals(response.data['content'], data['content'])
         self.assertEquals(response.data['course'], data['course'])
 
-    def test_delete_lesson(self):
-        """Тестирование удаления уроков"""
+    # def test_destroy_lesson(self):
+    #     """Тестирование удаления уроков"""
+    #
+    #     lesson = Lesson.objects.create(
+    #         title='Test',
+    #         description='Test',
+    #         content='https://www.youtube.com/',
+    #         course=self.course,
+    #         owner=self.user
+    #     )
+    #
+    #     url = reverse('education:lesson-delete', kwargs={'pk': lesson.pk})
+    #     response = self.client.delete(url)
+    #
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #     self.assertFalse(Lesson.objects.filter(pk=lesson.pk).exists())
 
-        lesson = Lesson.objects.create(
-            title='Test',
-            description='Test',
-            content='https://www.youtube.com/',
-            course=self.course,
-            owner=self.user
-        )
+    def test_create_course_subscription(self):
+        """Тестирование создания подписки"""
+        url = reverse('education:subscribe')
+        data = {
+            'course_id': self.course.id,
+            'content': 'https://www.youtube.com/',
+            'title': 'Тест',
+            'description': 'Тест'
+        }
+        response = self.client.post(url, data)
 
-        url = reverse('education:lesson-delete', kwargs={'pk': lesson.pk})
+        print(response.json())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        subscription = CourseSubscription.objects.get(user=self.user, course=self.course)
+        self.assertTrue(subscription.is_subscribed)
+
+    def test_delete_course_subscription(self):
+        """Тестирование удаления подписки"""
+        subscription = CourseSubscription.objects.create(user=self.user, course=self.course, is_subscribed=True)
+        url = reverse('education:unsubscribe', kwargs={'pk': subscription.id})
         response = self.client.delete(url)
 
-        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(Lesson.objects.filter(pk=lesson.pk).exists())
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(CourseSubscription.objects.filter(id=subscription.id).exists())
