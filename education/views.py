@@ -52,6 +52,9 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, LessonPermission]
 
+    def get_queryset(self):
+        return Lesson.objects.all()
+
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()

@@ -47,51 +47,34 @@ class EducationTestCase(APITestCase):
         self.assertEqual(Lesson.objects.get().title,
                          'Тест')  # Проверка, что созданный урок имеет правильное название
 
-    #
-    # def test_retrieve_lesson(self):
-    #     """Тестирование получения уроков"""
-    #
-    #     lesson = Lesson.objects.create(
-    #         title='Test',
-    #         description='Test',
-    #         content='Test',
-    #         course= 1,
-    #         owner=self.user
-    #     )
-    #
-    #     url = reverse('lesson-retrieve', kwargs={'pk': lesson.pk})
-    #     response = self.client.get(url)
-    #
-    #     self.assertEquals(response.status_code, status.HTTP_200_OK)
-    #     self.assertEquals(response.data, LessonSerializer(lesson).data)
-    #
-    # def test_update_lesson(self):
-    #     """Тестирование обновления уроков"""
-    #
-    #     lesson = Lesson.objects.create(
-    #         title='Test',
-    #         description='Test',
-    #         content='Test',
-    #         course='Test',
-    #         owner=self.user
-    #     )
-    #
-    #     url = reverse('lesson-update', kwargs={'pk': lesson.pk})
-    #     data = {
-    #         "title": "New Test",
-    #         "description": "New Test",
-    #         "content": "New Test",
-    #         "course": 1
-    #     }
-    #
-    #     response = self.client.put(url, data=data)
-    #
-    #     self.assertEquals(response.status_code, status.HTTP_200_OK)
-    #     self.assertEquals(response.data['title'], data['title'])
-    #     self.assertEquals(response.data['description'], data['description'])
-    #     self.assertEquals(response.data['content'], data['content'])
-    #     self.assertEquals(response.data['course'], data['course'])
-    #
+    def test_update_lesson(self):
+        """Тестирование обновления уроков"""
+
+        lesson = Lesson.objects.create(
+            title='Test',
+            description='Test',
+            content='https://www.youtube.com/',
+            course=self.course,
+            owner=self.user
+        )
+
+        url = reverse('education:lesson-update', kwargs={'pk': lesson.pk})
+        data = {
+            'title': 'Тест',
+            'description': 'Тест',
+            'content': 'https://www.youtube.com/',
+            'course': self.course.pk
+        }
+
+        response = self.client.put(url, data=data)
+
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(response.data['title'], data['title'])
+        self.assertEquals(response.data['description'], data['description'])
+        self.assertEquals(response.data['content'], data['content'])
+        self.assertEquals(response.data['course'], data['course'])
+
+
     # def test_delete_lesson(self):
     #     """Тестирование удаления уроков"""
     #
