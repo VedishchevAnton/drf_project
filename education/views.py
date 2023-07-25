@@ -10,6 +10,7 @@ from education.serliazers import CourseSerializer, LessonSerializer, PaymentsSer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
+    """Viewset for course"""
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     permission_classes = [IsAuthenticated, CoursePermission]
