@@ -80,4 +80,3 @@ class CourseSubscription(models.Model):
     class Meta:
         verbose_name = 'Подписка на курс'
         verbose_name_plural = 'Подписки на курсы'
-

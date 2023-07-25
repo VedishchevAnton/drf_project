@@ -38,6 +38,7 @@ STANDARD_APPS = [
 ]
 
 USER_APPS = [
+    'django_crontab',
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
@@ -165,4 +166,8 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://read-and-write.example.com",
+]
+
+CRONJOBS = [
+    ('0 12 * * *', 'education.services.check_payment_status'),  # проверка статуса платежа каждый день в 12.00
 ]

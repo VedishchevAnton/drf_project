@@ -1,5 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, generics
+from drf_yasg.openapi import Response
+from rest_framework import viewsets, generics, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -7,6 +8,7 @@ from education.models import Course, Lesson, Payments, CourseSubscription
 from education.paginators import VehiclePaginator
 from education.permissions import LessonPermission, CoursePermission
 from education.serliazers import CourseSerializer, LessonSerializer, PaymentsSerializer
+import stripe
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -66,6 +68,37 @@ class PaymentsCreateAPIView(generics.CreateAPIView):
     serializer_class = PaymentsSerializer
     permission_classes = [IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        """Метод создания платежа"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Получаем данные о платеже из сериализатора
+        payment_data = serializer.validated_data
+
+        # Создаем платеж в Stripe
+        stripe.api_key = "pk_test_51NXm18JkCiZgdkS3oaayzptg1BOAlOJG39pgaC" \
+                         "4i9dtwJPNciNcmnU4lNXBwWT8tjTwlRUp0fOOH4mO5t4vyO7GK00XoQEVRf9"
+        payment_intent = stripe.PaymentIntent.create(
+            amount=int(payment_data['payment_amount'] * 100),
+            currency="usd",
+            payment_method_types=["card"],
+            metadata={
+                "user_id": request.user.id,
+                "course_id": payment_data['paid_course'].id,
+                "lesson_id": payment_data['paid_lesson'].id,
+            },
+        )
+
+        # Сохраняем данные о платеже в базе данных
+        payment = serializer.save(
+            user=request.user,
+            payment_intent_id=payment_intent.id,
+        )
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class PaymentsListAPIView(generics.ListAPIView):
     serializer_class = PaymentsSerializer
@@ -80,6 +113,21 @@ class PaymentsRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = PaymentsSerializer
     queryset = Payments.objects.all()
     permission_classes = [IsAuthenticated]
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # Получаем данные о платеже из Stripe
+        stripe.api_key = "pk_test_51NXm18JkCiZgdkS3oaayzptg1BOAlOJG39pgaC" \
+                         "4i9dtwJPNciNcmnU4lNXBwWT8tjTwlRUp0fOOH4mO5t4vyO7GK00XoQEVRf9"
+        payment_intent = stripe.PaymentIntent.retrieve(instance.payment_intent_id)
+
+        # Обновляем статус платежа в базе данных
+        instance.status = payment_intent.status
+        instance.save()
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class PaymentsUpdateAPIView(generics.UpdateAPIView):

@@ -17,6 +17,8 @@ djangorestframework-simplejwt = "^5.2.2"
 coverage = "^7.2.7"
 drf-yasg = "^1.21.7"
 django-cors-headers = "^4.2.0"
+stripe = "^5.5.0"
+django-crontab = "^0.7.1"
 
 
 [build-system]
