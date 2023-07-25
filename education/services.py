@@ -10,7 +10,7 @@ intent = stripe.PaymentIntent.create(
 )
 
 # Получение информации о платеже
-intent = stripe.PaymentIntent.retrieve(intent.id)
+intent = stripe.PaymentIntent.retrieve(intent.id) # pi_3NXr1mJkCiZgdkS304zBF8Ug
 
 # Вывод информации о платеже
-print(intent.stripe_id)
+print(intent)
