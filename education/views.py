@@ -70,7 +70,9 @@ class PaymentsCreateAPIView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         """Метод создания платежа"""
+        # Создаем экземпляр сериализатора с переданными данными запроса
         serializer = self.get_serializer(data=request.data)
+        # Проверяем валидность данных сериализатора, иначе вызываем исключение
         serializer.is_valid(raise_exception=True)
 
         # Получаем данные о платеже из сериализатора
@@ -111,23 +113,24 @@ class PaymentsListAPIView(generics.ListAPIView):
 
 class PaymentsRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = PaymentsSerializer
-    queryset = Payments.objects.all()
-    permission_classes = [IsAuthenticated]
+    queryset = Payments.objects.all()  # запрос на получение всех объектов модели Payments
+    permission_classes = [IsAuthenticated]  # классы разрешений, необходимых для доступа к представлению
 
     def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
+        instance = self.get_object()  # получение объекта модели Payments по переданному идентификатору
 
         # Получаем данные о платеже из Stripe
         stripe.api_key = "pk_test_51NXm18JkCiZgdkS3oaayzptg1BOAlOJG39pgaC" \
                          "4i9dtwJPNciNcmnU4lNXBwWT8tjTwlRUp0fOOH4mO5t4vyO7GK00XoQEVRf9"
-        payment_intent = stripe.PaymentIntent.retrieve(instance.payment_intent_id)
+        payment_intent = stripe.PaymentIntent.retrieve(instance.payment_intent_id)  # получение данных о платеже из
+        # Stripe
 
         # Обновляем статус платежа в базе данных
         instance.status = payment_intent.status
-        instance.save()
+        instance.save()  # сохранение изменений в базе данных
 
         serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        return Response(serializer.data)  # возврат сериализованных данных в виде JSON
 
 
 class PaymentsUpdateAPIView(generics.UpdateAPIView):
