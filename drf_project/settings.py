@@ -169,5 +169,5 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CRONJOBS = [
-    ('0 12 * * *', 'education.services.check_payment_status'),  # проверка статуса платежа каждый день в 12.00
+    ('0 12 * * *', 'education.services.intent'),  # проверка статуса платежа каждый день в 12.00
 ]
