@@ -79,8 +79,7 @@ class PaymentsCreateAPIView(generics.CreateAPIView):
         payment_data = serializer.validated_data
 
         # Создаем платеж в Stripe
-        stripe.api_key = "pk_test_51NXm18JkCiZgdkS3oaayzptg1BOAlOJG39pgaC" \
-                         "4i9dtwJPNciNcmnU4lNXBwWT8tjTwlRUp0fOOH4mO5t4vyO7GK00XoQEVRf9"
+        stripe.api_key = "sk_test_51NXm18JkCiZgdkS3bUMwFIRAGZ2NgCH0mn3tGMKeVd9kkDP9qD10HP1AgHAACLNJikkt6ZJGd6AWYA4WfNX72GPm00BMHDqRS8"
         payment_intent = stripe.PaymentIntent.create(
             amount=int(payment_data['payment_amount'] * 100),
             currency="usd",
@@ -120,8 +119,7 @@ class PaymentsRetrieveAPIView(generics.RetrieveAPIView):
         instance = self.get_object()  # получение объекта модели Payments по переданному идентификатору
 
         # Получаем данные о платеже из Stripe
-        stripe.api_key = "pk_test_51NXm18JkCiZgdkS3oaayzptg1BOAlOJG39pgaC" \
-                         "4i9dtwJPNciNcmnU4lNXBwWT8tjTwlRUp0fOOH4mO5t4vyO7GK00XoQEVRf9"
+        stripe.api_key = "sk_test_51NXm18JkCiZgdkS3bUMwFIRAGZ2NgCH0mn3tGMKeVd9kkDP9qD10HP1AgHAACLNJikkt6ZJGd6AWYA4WfNX72GPm00BMHDqRS8"
         payment_intent = stripe.PaymentIntent.retrieve(instance.payment_intent_id)  # получение данных о платеже из
         # Stripe
 

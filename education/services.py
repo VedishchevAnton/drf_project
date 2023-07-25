@@ -5,8 +5,7 @@ from datetime import datetime, timedelta  # импорт модулей datetime
 from education.models import Payments
 
 # Установка ключа API Stripe
-stripe.api_key = "pk_test_51NXm18JkCiZgdkS3oaayzptg1BOAlOJG39pgaC" \
-                         "4i9dtwJPNciNcmnU4lNXBwWT8tjTwlRUp0fOOH4mO5t4vyO7GK00XoQEVRf9"
+stripe.api_key = "sk_test_51NXm18JkCiZgdkS3bUMwFIRAGZ2NgCH0mn3tGMKeVd9kkDP9qD10HP1AgHAACLNJikkt6ZJGd6AWYA4WfNX72GPm00BMHDqRS8"
 
 
 def check_payment_status():
