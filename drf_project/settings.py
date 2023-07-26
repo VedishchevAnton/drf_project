@@ -168,6 +168,11 @@ CSRF_TRUSTED_ORIGINS = [
     "https://read-and-write.example.com",
 ]
 
+# Настройки с StrikeAPI
+STRIPE_PUBLIC_KEY = 'pk_test_51NXm18JkCiZgdkS3oaayzptg1BOAlOJG39pgaC4i9dtwJPNciNcmnU4lNXBwWT8tjTwlRUp0fOOH4mO5t4vyO7GK00XoQEVRf9'
+STRIPE_SECRET_KEY = 'sk_test_51NXm18JkCiZgdkS3bUMwFIRAGZ2NgCH0mn3tGMKeVd9kkDP9qD10HP1AgHAACLNJikkt6ZJGd6AWYA4WfNX72GPm00BMHDqRS8'
+
+# Настройки реализации рассылки через crontab
 CRONJOBS = [
-    ('0 12 * * *', 'education.services.intent'),  # проверка статуса платежа каждый день в 12.00
+    ('0 12 * * *', ''),  # проверка статуса платежа каждый день в 12.00
 ]

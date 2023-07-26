@@ -59,6 +59,7 @@ class Payments(models.Model):
     # Десятичные числа с фиксированной точностью. Максимальное количество цифр(max_digits), которое может быть
     # хранено, равно 10, а количество знаков(decimal_places) после запятой равно 2.
     payment_method = models.CharField(max_length=20, choices=choices_payment_method, verbose_name='Метод оплаты')
+    payment_intent_id = models.CharField(max_length=50, blank=True, null=True, verbose_name='ID платежа в Stripe')
 
     def __str__(self):
         return f"{self.user} - {self.paid_course or self.paid_lesson} - {self.payment_method}"
