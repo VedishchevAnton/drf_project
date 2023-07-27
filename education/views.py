@@ -9,9 +9,7 @@ from education.paginators import VehiclePaginator
 from education.permissions import LessonPermission, CoursePermission
 from education.serliazers import CourseSerializer, LessonSerializer, PaymentsSerializer
 
-import stripe
-from drf_project.settings import STRIPE_SECRET_KEY
-from education.services import PaymentService
+from education.services import StripePayService
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -72,16 +70,20 @@ class PaymentsCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        amount = 1000 * 100
-        currency = 'usd'
-        payment_method = 'card'
+        amount = 500 * 100  # сумма платежа в центах
+        currency = 'usd'  # валюта платежа
+        # payment_method = 'card'  # метод оплаты, не используется в данном коде
 
-        payment_service = PaymentService()
-        session_id = payment_service.create_payment(amount, currency)
+        payment_service = StripePayService()  # создание экземпляра класса StripePayService для обработки платежей
+        session_id = payment_service.create_payment(amount, currency)  # создание платежной сессии
         if session_id:
-            return Response({"session": session_id}, status=status.HTTP_200_OK)
+            return Response({"session": session_id},
+                            status=status.HTTP_200_OK)  # возврат идентификатора сессии в формате JSON, если создание
+            # платежа прошло успешно
         else:
-            return Response({"error": "Payment creation failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": "Payment creation failed"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)  # возврат ошибки в формате JSON, если
+            # создание платежа не удалось
 
 
 class PaymentsListAPIView(generics.ListAPIView):

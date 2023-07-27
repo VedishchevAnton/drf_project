@@ -1,8 +1,9 @@
 import stripe
+
 from drf_project.settings import STRIPE_SECRET_KEY
 
 
-class PaymentService:
+class StripePayService:
     def __init__(self):
         stripe.api_key = STRIPE_SECRET_KEY
 
