@@ -44,7 +44,6 @@ class CourseSerializer(serializers.ModelSerializer):
 
 
 class PaymentsSerializer(serializers.ModelSerializer):
-    payment_intent_id = serializers.CharField(max_length=50, required=False)
 
     class Meta:
         model = Payments
