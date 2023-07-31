@@ -1,6 +1,10 @@
 import stripe
+from celery.schedules import schedule
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
+import json
 
 from drf_project.settings import STRIPE_SECRET_KEY
+from datetime import datetime, timedelta
 
 
 class StripePayService:
@@ -36,3 +40,22 @@ class StripePayService:
         except stripe.error.StripeError as e:
             print(f"Error: {e}")
             return None
+
+
+def set_schedule(*args, **kwargs):
+    # Создаем интервальное расписание
+    schedule, created = IntervalSchedule.objects.get_or_create(
+        every=1,
+        period=IntervalSchedule.MINUTES,
+    )
+    # Создаем периодическую задачу
+    PeriodicTask.objects.create(
+        interval=schedule,  # интервальное расписание, которое мы создали выше
+        name='block_inactive_users',  # просто описывает эту периодическую задачу
+        task='main.tasks.block_inactive_users',  # имя задачи
+        args=json.dumps(['arg1', 'arg2']),
+        kwargs=json.dumps({
+            'be_careful': True,
+        }),
+        expires=datetime.utcnow() + timedelta(seconds=30)
+    )

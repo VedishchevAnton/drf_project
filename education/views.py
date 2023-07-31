@@ -58,7 +58,6 @@ class LessonRetrieveAPIView(generics.RetrieveAPIView):
         return Lesson.objects.all()
 
 
-
 class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, LessonPermission]
