@@ -10,6 +10,7 @@ from education.permissions import LessonPermission, CoursePermission
 from education.serliazers import CourseSerializer, LessonSerializer, PaymentsSerializer
 
 from education.services import StripePayService
+from education.tasks import send_course_update
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -34,6 +35,8 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         new_lesson = serializer.save(owner=self.request.user)
+        if new_lesson:
+            send_course_update.delay(new_lesson.course.id)
         new_lesson.owner = self.request.user
         new_lesson.save()
 
@@ -50,6 +53,10 @@ class LessonListAPIView(generics.ListAPIView):
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
     permission_classes = [AllowAny, LessonPermission]
+
+    def get_queryset(self):
+        return Lesson.objects.all()
+
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
