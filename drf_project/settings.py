@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -172,7 +172,28 @@ CSRF_TRUSTED_ORIGINS = [
 STRIPE_PUBLIC_KEY = 'pk_test_51NXm18JkCiZgdkS3oaayzptg1BOAlOJG39pgaC4i9dtwJPNciNcmnU4lNXBwWT8tjTwlRUp0fOOH4mO5t4vyO7GK00XoQEVRf9'
 STRIPE_SECRET_KEY = 'sk_test_51NXm18JkCiZgdkS3bUMwFIRAGZ2NgCH0mn3tGMKeVd9kkDP9qD10HP1AgHAACLNJikkt6ZJGd6AWYA4WfNX72GPm00BMHDqRS8'
 
-# Настройки реализации рассылки через crontab
-CRONJOBS = [
-    ('0 12 * * *', ''),  # проверка статуса платежа каждый день в 12.00
-]
+# Настройки SMTP-сервера
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'vedanton@mail.ru'
+EMAIL_HOST_PASSWORD = 'hci6s06uA91awsDkvzm0'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# URL-адрес брокера сообщений
+CELERY_BROKER_URL = 'redis://localhost:6379'  # Например, Redis, который по умолчанию работает на порту 6379
+
+# URL-адрес брокера результатов, также Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+# Часовой пояс для работы Celery
+CELERY_TIMEZONE = "Europe/Moscow"
+
+# Флаг отслеживания выполнения задач
+CELERY_TASK_TRACK_STARTED = True
+
+# Максимальное время на выполнение задачи
+CELERY_TASK_TIME_LIMIT = 30 * 60
